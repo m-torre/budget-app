@@ -1,0 +1,44 @@
+{
+  "name": "budget-app",
+  "version": "1.0.0",
+  "description": "Budget app developed for the Alkemy full stack challenge",
+  "engines": {
+    "node": "17.x"
+  },
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server",
+    "build": "cd client/ && npm install && npm run build && cp -r build ../"
+  },
+  "cacheDirectories": [
+    "node_modules",
+    "client/node_modules"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-torre/budget-app.git"
+  },
+  "keywords": [
+    "node",
+    "react",
+    "express",
+    "budget"
+  ],
+  "author": "Maximiliano Torre",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m-torre/budget-app/issues"
+  },
+  "homepage": "https://github.com/m-torre/budget-app#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "pg": "^8.7.3",
+    "sequelize": "^6.17.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.12.0",
+    "nodemon": "^2.0.15"
+  }
+}
