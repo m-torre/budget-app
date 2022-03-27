@@ -1,19 +1,17 @@
 import React, { useEffect } from 'react'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  Routes, Route
 } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { initializeTransactions } from './reducers/transactionReducer'
 import { ThemeProvider } from '@mui/material/styles'
 import {
-  AppBar,
-  Button,
   Container,
   CssBaseline,
-  Stack,
-  Toolbar,
+  Stack
 } from '@mui/material'
+import ResponsiveAppBar from './components/ResponsiveAppBar'
 import Home from './components/Home'
 import Transactions from './components/Transactions'
 import theme from './theme'
@@ -31,17 +29,7 @@ const App = () => {
         <CssBaseline />
         <Container maxWidth='md'>
           <Stack spacing={3}>
-            <AppBar position="static">
-              <Toolbar>
-                <Button
-                  color="inherit" component={Link} to="/">
-                  Home
-                </Button>
-                <Button color="inherit" component={Link} to="/transactions">
-                  Transactions
-                </Button>
-              </Toolbar>
-            </AppBar>
+            <ResponsiveAppBar />
             <Routes>
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/" element={<Home />} />
