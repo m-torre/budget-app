@@ -13,6 +13,12 @@ app.use(cors())
 
 app.use('/api/transactions', transactionsRouter)
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'Unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
 const start = async () => {
   await connectToDatabase()
   app.listen(PORT, () => {
