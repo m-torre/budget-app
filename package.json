@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node server",
     "dev": "nodemon server",
-    "build": "cd client/ && npm install && npm run build && cp -r build ../"
+    "build": "cd client/ && npm install && npm run build"
   },
   "cacheDirectories": [
     "node_modules",
