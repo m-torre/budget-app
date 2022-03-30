@@ -1,4 +1,5 @@
 const cors = require('cors')
+const path = require('path')
 const express = require('express')
 const app = express()
 
@@ -12,6 +13,10 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/api/transactions', transactionsRouter)
+
+app.get('/transactions', function (req, res) {
+  res.sendFile(path.resolve(__dirname, '../build', 'index.html'))
+})
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'Unknown endpoint' })
