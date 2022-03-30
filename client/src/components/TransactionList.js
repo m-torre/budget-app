@@ -97,16 +97,18 @@ const TransactionList = ({ transactions, options }) => {
       <TableContainer>
         <Table sx={{width: '90%', margin: 'auto'}}>
           <TableBody>
-            {transactions.map(transaction => 
-              <Transaction
-                key={transaction.id}
-                transaction={transaction}
-                options={options}
-                setOpenModal={setOpenModal}
-                setEditId={setEditId}
-                setOpenDialog={setOpenDialog}
-                setDeleteId={setDeleteId}
-              />
+            {transactions
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map(transaction => 
+                <Transaction
+                  key={transaction.id}
+                  transaction={transaction}
+                  options={options}
+                  setOpenModal={setOpenModal}
+                  setEditId={setEditId}
+                  setOpenDialog={setOpenDialog}
+                  setDeleteId={setDeleteId}
+                />
             )}
           </TableBody>
         </Table>
