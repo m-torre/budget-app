@@ -29,14 +29,11 @@ const ResponsiveAppBar = () => {
     <AppBar position="static">
       <Container>
         <Toolbar disableGutters>
-          <MonetizationOnIcon
-            fontSize="large"
-            sx={{ display: { xs: 'none', sm: 'flex' } }}
-          />
           <Typography
             variant='h6'
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}
           >
+            <MonetizationOnIcon />
             Budget App
           </Typography>
           <Box
@@ -82,14 +79,11 @@ const ResponsiveAppBar = () => {
             </Menu>
           </Box>
 
-          <MonetizationOnIcon
-            fontSize="large"
-            sx={{ display: { xs: 'flex', sm: 'none' } }}
-          />
           <Typography
             variant='h6'
-            sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
+            sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' }, alignItems: 'center' }}
           >
+            <MonetizationOnIcon />
             Budget App
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'flex' } }}>
