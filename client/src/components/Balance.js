@@ -15,25 +15,14 @@ const Balance = () => {
   const income = useSelector(state => state.filter(transaction => transaction.type === 'income'))
   const expenses = useSelector(state => state.filter(transaction => transaction.type === 'expense'))
 
-  const getAmount = (transactions) => {
-    let amount = 0
-    
-    if (transactions.length > 0)
-    {
-      transactions.forEach(transaction => {
-        if (transaction.type === 'income')
-        {
-          amount += Number(transaction.amount)
-        }
-        else
-        {
-          amount -= Number(transaction.amount)
-        }
-      })
-    }
-
-    return amount
-  }
+  const getAmount = (transactions) => (
+    transactions.reduce((sum, transaction) =>
+      transaction.type === 'income'
+      ? sum + Number(transaction.amount)
+      : sum - Number(transaction.amount),
+      0
+    )
+  )
 
   return (
     <Grid container spacing={2}>
