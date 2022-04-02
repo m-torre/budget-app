@@ -15,6 +15,7 @@ import {
   Typography,
   TextField
 } from '@mui/material'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 
 const TransactionForm = () => {
   const [type, setType] = useState('income')
@@ -60,11 +61,16 @@ const TransactionForm = () => {
 
   return (
     <>
-      <Stack spacing={2}>
-        <Typography variant='h4' align='center'>Add transaction</Typography>
-        <Stack spacing={1} alignItems="flex-start">
+      <Stack spacing={2} alignItems="center">
+        <Typography variant='h4' sx={{ alignItems: "center", display: "flex", columnGap: 1 }}>
+          <AddCircleOutlineIcon fontSize='inherit' />
+          Add transaction
+        </Typography>
+        <Stack spacing={1} alignItems="center">
           <FormControl>
-            <FormLabel id="type-radio-buttons-group-label">Type</FormLabel>
+            <FormLabel id="type-radio-buttons-group-label" sx={{ margin: 'auto' }}>
+              Type
+            </FormLabel>
             <RadioGroup
               aria-labelledby="type-radio-buttons-group-label"
               defaultValue="income"

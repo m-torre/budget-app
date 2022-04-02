@@ -6,6 +6,7 @@ import {
   Stack,
   Typography
 } from '@mui/material'
+import HistoryIcon from '@mui/icons-material/History'
 import TransactionList from './TransactionList'
 
 const History = () => {
@@ -14,8 +15,11 @@ const History = () => {
   return (
     <Card>
       <CardContent>
-        <Stack spacing={2}>
-          <Typography variant='h4' align='center'>History</Typography>
+        <Stack spacing={2} alignItems="center">
+          <Typography variant='h4' sx={{ alignItems: "center", display: "flex", columnGap: 1 }}>
+            <HistoryIcon fontSize='inherit' />
+            History
+          </Typography>
           {
             transactions.length > 0
             ? <TransactionList transactions={transactions} options={false}/>

@@ -6,7 +6,9 @@ import {
   Card,
   CardContent,
   Stack,
-  Typography } from '@mui/material'
+  Typography
+} from '@mui/material'
+import { GiReceiveMoney, GiPayMoney } from 'react-icons/gi'
 import TransactionForm from './TransactionForm'
 import TransactionList from './TransactionList'
 
@@ -24,8 +26,11 @@ const Transactions = () => {
           </Card>
           <Card>
             <CardContent>
-              <Stack spacing={2}>
-                <Typography variant='h4' align='center'>Income</Typography>
+              <Stack spacing={2} alignItems="center">
+                <Typography variant='h4' sx={{ alignItems: "center", display: "flex", columnGap: 1 }}>
+                  <GiReceiveMoney />
+                  Income
+                </Typography>
                 {
                   income.length > 0
                   ? <TransactionList transactions={income} options={true}/>
@@ -36,8 +41,11 @@ const Transactions = () => {
           </Card>
           <Card>
             <CardContent>
-              <Stack spacing={2}>
-                <Typography variant='h4' align='center'>Expenses</Typography>  
+              <Stack spacing={2} alignItems="center">
+                <Typography variant='h4' sx={{ alignItems: "center", display: "flex", columnGap: 1 }}>
+                  <GiPayMoney />
+                  Expenses
+                </Typography>  
                 {
                   expenses.length > 0
                   ? <TransactionList transactions={expenses} options={true}/>
