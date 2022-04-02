@@ -28,7 +28,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Container maxWidth='md'>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             <ResponsiveAppBar />
             <Routes>
               <Route path="/transactions" element={<Transactions />} />
