@@ -8,6 +8,7 @@ import {
   Stack,
   Typography
 } from '@mui/material'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { GiReceiveMoney, GiPayMoney } from 'react-icons/gi'
 import TransactionForm from './TransactionForm'
 import TransactionList from './TransactionList'
@@ -21,7 +22,13 @@ const Transactions = () => {
       <Stack spacing={2}>
           <Card>
             <CardContent>
-              <TransactionForm />
+              <Stack spacing={2} alignItems="center">
+                <Typography variant='h4' sx={{ alignItems: "center", display: "flex", columnGap: 1 }}>
+                  <AddCircleOutlineIcon fontSize='inherit' />
+                  Add transaction
+                </Typography>
+                <TransactionForm />
+              </Stack>
             </CardContent>
           </Card>
           <Card>
