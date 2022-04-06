@@ -58,7 +58,10 @@ const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDia
       {
         options &&  
         <TableCell align='center'>
-          <IconButton aria-label="edit" onClick={() => editTransaction()}>
+          <IconButton
+            aria-label="edit"
+            onClick={() => editTransaction()}
+          >
             <EditIcon />
           </IconButton>
         </TableCell>
@@ -66,7 +69,10 @@ const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDia
       {
         options &&
         <TableCell align='center'>
-          <IconButton aria-label="delete" onClick={handleDelete}>
+          <IconButton
+            aria-label="delete"
+            onClick={handleDelete}
+          >
             <DeleteIcon />
           </IconButton>
         </TableCell>
@@ -122,14 +128,22 @@ const TransactionList = ({ transactions, options }) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <EditTransactionModal
-        open={openModal}
-        handleClose={() => setOpenModal(false)} id={editId}
-      />
-      <DeleteTransactionDialog
-        open={openDialog}
-        handleClose={() => setOpenDialog(false)} id={deleteId}
-      />
+      {
+        openModal &&
+        <EditTransactionModal
+          open={openModal}
+          handleClose={() => setOpenModal(false)}
+          id={editId}
+        />
+      }
+      {
+        openDialog &&
+        <DeleteTransactionDialog
+          open={openDialog}
+          handleClose={() => setOpenDialog(false)}
+          id={deleteId}
+        />
+      }
     </>
   )
 }

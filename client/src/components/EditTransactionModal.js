@@ -34,31 +34,25 @@ const useStyles = makeStyles((theme) => ({
     float: 'right'
   },
   form: {
-    marginLeft: '6px'
+    width: '260px',
+    margin: 'auto'
+  },
+  formElement: {
+    paddingRight: '8px'
   }
 }))
 
 const EditTransactionModal = ({ open, handleClose, id }) => {
   let transaction = useSelector(state => state.find(transaction => transaction.id === id))
-  if (transaction === undefined) {
-    const dateNow = new Date()
-    
-    transaction = {
-      name: '',
-      amount: 0,
-      date: dateNow
-    }
-  }
 
-  const [selectedDate, setSelectedDate] = useState(transaction.date)
+  const dateParts = transaction.date.split('/')
+  const [selectedDate, setSelectedDate] = useState(new Date(dateParts[2], dateParts[1] - 1, dateParts[0]))
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate)
   }
 
   const dispatch = useDispatch()
-
-  const classes = useStyles()
 
   const editTransaction = (event) => {
     event.preventDefault()
@@ -77,10 +71,12 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
 
     handleClose()
   }
-  
+
+  const classes = useStyles()
+
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
-      <Modal open={open} >
+      <Modal open={open}>
         <Box className={classes.modal}>
           <IconButton
             aria-label="close"
@@ -90,16 +86,30 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
             <CloseIcon />
           </IconButton>
           <form onSubmit={editTransaction}>
-            <Grid container spacing={1} direction='column' className={classes.form}>
+            <Grid
+              container
+              spacing={1}
+              direction='column'
+              className={classes.form}
+            >
               <Grid item>
-                <TextField name='name' label='Name' defaultValue={transaction.name} required={true} />
+                <TextField
+                  name='name'
+                  label='Name'
+                  defaultValue={transaction.name}
+                  required={true}
+                  fullWidth
+                  className={classes.formElement}
+                />
               </Grid>
               <Grid item>
                 <DatePicker
                   label="Date"
                   value={selectedDate}
                   onChange={handleDateChange}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) =>
+                    <TextField {...params} fullWidth className={classes.formElement} />
+                  }
                 />
               </Grid>
               <Grid item>
@@ -115,10 +125,16 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
                   InputProps={{
                     startAdornment: <InputAdornment position='start'>$</InputAdornment>,
                   }}
+                  fullWidth
+                  className={classes.formElement}
                 />
               </Grid>
               <Grid item>
-                <Button variant='contained' color='primary' type='submit'>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  type='submit'
+                >
                   Edit
                 </Button>
               </Grid>
