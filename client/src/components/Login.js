@@ -104,8 +104,12 @@ const Login = () => {
   }
 
   return (
-    <Container component="main" maxWidth='xs'>
-      <Card sx={{ marginTop: '50px' }}>
+    <Container
+      component="main"
+      maxWidth='xs'
+      sx={{ paddingTop: 5 }}
+    >
+      <Card>
         <CardContent>
           <Grid
             container

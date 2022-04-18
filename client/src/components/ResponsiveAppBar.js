@@ -35,14 +35,17 @@ const ResponsiveAppBar = () => {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={{ marginBottom: 2 }}
+    >
       <Container>
         <Toolbar disableGutters>
           <Typography
             variant='h6'
             sx={{
-              flexGrow: 1,
               display: { xs: 'none', sm: 'flex' },
+              flexGrow: 1,
               alignItems: 'center',
               columnGap: 0.5
             }}
@@ -52,8 +55,8 @@ const ResponsiveAppBar = () => {
           </Typography>
           <Box
             sx={{
-              flexGrow: 1,
-              display: { xs: 'flex', sm: 'none' }
+              display: { xs: 'flex', sm: 'none' },
+              flexGrow: 1
             }}
           >
             <IconButton
@@ -112,8 +115,8 @@ const ResponsiveAppBar = () => {
           <Typography
             variant='h6'
             sx={{
-              flexGrow: 1,
               display: { xs: 'flex', sm: 'none' },
+              flexGrow: 1,
               alignItems: 'center',
               columnGap: 0.5
             }}

@@ -9,17 +9,14 @@ import { setUser } from './reducers/userReducer'
 import { initializeTransactions } from './reducers/transactionReducer'
 import transactionService from './services/transactions'
 import { ThemeProvider } from '@mui/material/styles'
-import {
-  Container,
-  CssBaseline,
-  Stack
-} from '@mui/material'
+import { CssBaseline } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import ResponsiveAppBar from './components/ResponsiveAppBar'
 import Login from './components/Login'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './components/Home'
 import Transactions from './components/Transactions'
+import Footer from './components/Footer'
 import theme from './theme'
 
 const App = () => {
@@ -48,36 +45,33 @@ const App = () => {
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'center',
-        }}
+          }}
         >
           <CssBaseline />
-          <Container maxWidth='md'>
-            <Stack spacing={2}>
-              { user && <ResponsiveAppBar /> }
-              <Routes>
-                <Route
-                  index
-                  element={<Login />}
-                />
-                <Route
-                  path="/login"
-                  element={<Login />}
-                />
-                <Route
-                  element={<ProtectedRoute isAllowed={!!user} />}
-                >
-                  <Route
-                    path="/home"
-                    element={<Home />}
-                  />
-                  <Route
-                    path="/transactions"
-                    element={<Transactions />}
-                  />
-                </Route>
-              </Routes>
-            </Stack>
-          </Container>
+          { user && <ResponsiveAppBar /> }
+          <Routes>
+            <Route
+              index
+              element={<Login />}
+            />
+            <Route
+              path="login"
+              element={<Login />}
+            />
+            <Route
+              element={<ProtectedRoute isAllowed={!!user} />}
+            >
+              <Route
+                path="home"
+                element={<Home />}
+              />
+              <Route
+                path="transactions"
+                element={<Transactions />}
+              />
+            </Route>
+          </Routes>
+          <Footer />
         </SnackbarProvider>
       </ThemeProvider>
     </Router>
