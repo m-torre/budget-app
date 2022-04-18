@@ -14,8 +14,10 @@ import TransactionForm from './TransactionForm'
 import TransactionList from './TransactionList'
 
 const Transactions = () => {
-  const income = useSelector(state => state.filter(transaction => transaction.type === 'income'))
-  const expenses = useSelector(state => state.filter(transaction => transaction.type === 'expense'))
+  const user = useSelector(state => state.user)
+  const transactions = useSelector(state => state.transactions.filter(transaction => transaction.user.name === user.name))
+  const income = transactions.filter(transaction => transaction.type === 'income')
+  const expenses = transactions.filter(transaction => transaction.type === 'expense')
 
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>

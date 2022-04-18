@@ -1,26 +1,50 @@
+const jwt = require('jsonwebtoken')
 const router = require('express').Router()
 
 const { request } = require('express')
-const { Transaction } = require('../models')
-
-const transactionFinder = async (req, res, next) => {
-  req.transaction = await Transaction.findByPk(req.params.id)
-  next()
-}
+const { Transaction, User } = require('../models')
 
 router.get('/', async (req, res) => {
-  const transactions = await Transaction.findAll()
+  const transactions = await Transaction.findAll({
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      attributes: ['name']
+    }
+  })
   res.json(transactions)
 })
 
-router.post('/', async (req, res) => {
+const tokenExtractor = (req, res, next) => {
+  const authorization = req.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    try {
+      req.decodedToken = jwt.verify(authorization.substring(7), process.env.SECRET)
+    } catch{
+      res.status(401).json({ error: 'Token invalid' })
+    }
+  } else {
+    res.status(401).json({ error: 'Token missing' })
+  }
+  next()
+}
+
+router.post('/', tokenExtractor, async (req, res) => {
   try {
-    const transaction = await Transaction.create(req.body)
+    const user = await User.findByPk(req.decodedToken.id)
+    const transaction = await Transaction.create({ ...req.body, userId: user.id })
+    delete transaction.dataValues.userId
+    transaction.dataValues.user = { name: user.name }
     res.json(transaction)
   } catch(error) {
     return res.status(400).json({ error })
   }
 })
+
+const transactionFinder = async (req, res, next) => {
+  req.transaction = await Transaction.findByPk(req.params.id)
+  next()
+}
 
 router.get('/:id', transactionFinder, async (req, res) => {
   if (req.transaction) {

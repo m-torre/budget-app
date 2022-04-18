@@ -51,7 +51,7 @@ export const modifyTransaction = (id, content) => {
 
 export const deleteTransaction = (id) => {
   return async dispatch => {
-    const deletedTransaction = await transactionService.deleteTransaction(id)
+    await transactionService.deleteTransaction(id)
     dispatch({
       type: 'DELETE_TRANSACTION',
       data: {

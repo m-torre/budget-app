@@ -16,6 +16,7 @@ import {
   Modal,
   TextField
 } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import CloseIcon from '@mui/icons-material/Close'
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     left: '50%',
     top: '50%',
     marginLeft: '-145px',
-    marginTop: '-135px',
+    marginTop: '-145px',
     backgroundColor: theme.palette.background.paper,
     borderRadius: '10px'
   },
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const EditTransactionModal = ({ open, handleClose, id }) => {
-  let transaction = useSelector(state => state.find(transaction => transaction.id === id))
+  let transaction = useSelector(state => state.transactions.find(transaction => transaction.id === id))
 
   const dateParts = transaction.date.split('/')
   const [selectedDate, setSelectedDate] = useState(new Date(dateParts[2], dateParts[1] - 1, dateParts[0]))
@@ -53,6 +54,7 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
   }
 
   const dispatch = useDispatch()
+  const { enqueueSnackbar } = useSnackbar()
 
   const editTransaction = (event) => {
     event.preventDefault()
@@ -68,6 +70,9 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
     event.target.amount.value = ''
 
     dispatch(modifyTransaction(id, content))
+    enqueueSnackbar('Transaction edited', { 
+      variant: 'success',
+    })
 
     handleClose()
   }

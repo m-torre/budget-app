@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { clearUser } from '../reducers/userReducer'
 import {
   AppBar,
   Box,
@@ -25,19 +27,34 @@ const ResponsiveAppBar = () => {
     setAnchorElNav(null)
   }
 
+  const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedBudgetAppUser')
+    dispatch(clearUser())
+  }
+
   return (
     <AppBar position="static">
       <Container>
         <Toolbar disableGutters>
           <Typography
             variant='h6'
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', sm: 'flex' },
+              alignItems: 'center',
+              columnGap: 0.5
+            }}
           >
             <MonetizationOnIcon />
             Budget App
           </Typography>
           <Box
-            sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' } }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'flex', sm: 'none' }
+            }}
           >
             <IconButton
               size="large"
@@ -66,14 +83,27 @@ const ResponsiveAppBar = () => {
                 display: { xs: 'block', sm: 'none' },
               }}
             >
-              <MenuItem component={Link} to="/" onClick={handleCloseNavMenu}>
+              <MenuItem
+                component={Link}
+                to="/"
+                onClick={handleCloseNavMenu}
+              >
                 <Typography textAlign="center">
                   Home
                 </Typography>
               </MenuItem>
-              <MenuItem component={Link} to="/transactions" onClick={handleCloseNavMenu}>
+              <MenuItem
+                component={Link}
+                to="/transactions"
+                onClick={handleCloseNavMenu}
+              >
                 <Typography textAlign="center">
                   Transactions
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Typography textAlign="center">
+                  Logout
                 </Typography>
               </MenuItem>
             </Menu>
@@ -81,17 +111,40 @@ const ResponsiveAppBar = () => {
 
           <Typography
             variant='h6'
-            sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'none' }, alignItems: 'center' }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'flex', sm: 'none' },
+              alignItems: 'center',
+              columnGap: 0.5
+            }}
           >
             <MonetizationOnIcon />
             Budget App
           </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'flex' } }}>
-            <Button color="inherit" component={Link} to="/">
+          <Box
+            sx={{
+              display: { xs: 'none', sm: 'flex' }
+            }}
+          >
+            <Button
+              color="inherit"
+              component={Link}
+              to="/home"
+            >
               Home
             </Button>
-            <Button color="inherit" component={Link} to="/transactions">
+            <Button
+              color="inherit"
+              component={Link}
+              to="/transactions"
+            >
               Transactions
+            </Button>
+            <Button
+              color="inherit"
+              onClick={handleLogout}
+            >
+              Logout
             </Button>
           </Box>
         </Toolbar>

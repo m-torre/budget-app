@@ -10,7 +10,8 @@ import HistoryIcon from '@mui/icons-material/History'
 import TransactionList from './TransactionList'
 
 const History = () => {
-  const transactions = useSelector(state => state)
+  const user = useSelector(state => state.user)
+  const transactions = useSelector(state => state.transactions.filter(transaction => transaction.user.name === user.name))
 
   return (
     <Card>
