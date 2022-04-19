@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   Container,
-  Stack,
   Typography
 } from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
@@ -27,49 +26,83 @@ const Transactions = () => {
         maxWidth="md"
         sx={{ paddingBottom: 10.5 }}
       >
-        <Stack spacing={2}>
-            <Card>
-              <CardContent>
-                <Stack spacing={2} alignItems="center">
-                  <Typography variant='h4' sx={{ alignItems: "center", display: "flex", columnGap: 1 }}>
-                    <AddCircleOutlineIcon fontSize='inherit' />
-                    Add transaction
-                  </Typography>
-                  <TransactionForm />
-                </Stack>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <Stack spacing={2} alignItems="center">
-                  <Typography variant='h4' sx={{ alignItems: "center", display: "flex", columnGap: 1 }}>
-                    <GiReceiveMoney />
-                    Income
-                  </Typography>
-                  {
-                    income.length > 0
-                    ? <TransactionList transactions={income} options={true}/>
-                    : <Typography variant='body1' align='center'>No income yet</Typography>
-                  }
-                </Stack>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <Stack spacing={2} alignItems="center">
-                  <Typography variant='h4' sx={{ alignItems: "center", display: "flex", columnGap: 1 }}>
-                    <GiPayMoney />
-                    Expenses
-                  </Typography>  
-                  {
-                    expenses.length > 0
-                    ? <TransactionList transactions={expenses} options={true}/>
-                    : <Typography variant='body1' align='center'>No expenses yet</Typography>
-                  }
-                </Stack>
-              </CardContent>
-            </Card>
-        </Stack>
+        <Card sx={{ marginBottom: 2 }}>
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >  
+            <Typography
+              variant='h4'
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                columnGap: 1,
+                marginBottom: 2
+              }}
+            >
+              <AddCircleOutlineIcon fontSize='inherit' />
+              Add transaction
+            </Typography>
+            <TransactionForm />
+          </CardContent>
+        </Card>
+        <Card sx={{ marginBottom: 2 }}>
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
+            <Typography
+              variant='h4'
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                columnGap: 1,
+                marginBottom: 2
+              }}
+            >
+              <GiReceiveMoney />
+              Income
+            </Typography>
+            {
+              income.length > 0
+              ? <TransactionList transactions={income} options={true}/>
+              : <Typography variant='body1' align='center'>No income yet</Typography>
+            }
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
+            <Typography
+              variant='h4'
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                columnGap: 1,
+                marginBottom: 2
+              }}
+            >
+              <GiPayMoney />
+              Expenses
+            </Typography>  
+            {
+              expenses.length > 0
+              ? <TransactionList transactions={expenses} options={true}/>
+              : <Typography variant='body1' align='center'>No expenses yet</Typography>
+            }
+          </CardContent>
+        </Card>
       </Container>
     </LocalizationProvider>
   )

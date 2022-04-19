@@ -16,8 +16,6 @@ import {
   Card,
   CardContent,
   Container,
-  Grid,
-  Stack,
   Tab,
   Tabs,
   TextField,
@@ -31,7 +29,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 const TabPanel = ({ children, value, index, ...other }) => (
   <div {...other}>
-    {value === index && <Box>{children}</Box>}
+    {value === index && (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
+        }}
+      >
+        {children}
+      </Box>
+    )}
   </div>
 )
 
@@ -110,155 +118,154 @@ const Login = () => {
       sx={{ paddingTop: 5 }}
     >
       <Card>
-        <CardContent>
-          <Grid
-            container
-            direction='column'
-            spacing={2}
-            justifyContent='center'
-            alignItems='center'
+        <CardContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
+        >
+          <Typography
+            component="h1"
+            variant='h3'
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              columnGap: 0.5,
+              marginBottom: 2
+            }}
           >
-            <Grid item>
-              <Typography
-                component="h1"
-                variant='h3'
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  columnGap: 0.5
-                }}
+            <MonetizationOnIcon
+              color="primary"
+              fontSize='inherit'
+            />
+            Budget App
+          </Typography>
+            
+          <Tabs
+            value={tabValue}
+            onChange={handleTabValueChange}
+            sx={{ marginBottom: 2 }}
+          >
+            <Tab label='Login' />
+            <Tab label='Register' />
+          </Tabs>
+            
+          <TabPanel value={tabValue} index={0}>
+            <Avatar
+              sx={{
+                bgcolor: 'secondary.main',
+                marginBottom: 2
+              }}
+            >
+              <LockOpenIcon />
+            </Avatar>
+            <Box
+              component="form"
+              onSubmit={handleLogin}
+              sx={{
+                width: "90%",
+                marginBottom: 2
+              }}
+            >
+              <TextField
+                name='username'
+                label='Email'
+                type='email'
+                required={true}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <TextField
+                name='password'
+                label='Password'
+                type='password'
+                required={true}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <Button
+                type='submit'
+                color='primary'
+                variant='contained'
+                fullWidth
               >
-                <MonetizationOnIcon
-                  color="primary"
-                  fontSize='inherit'
-                />
-                Budget App
-              </Typography>
-            </Grid>
-
-            <Grid item>
-              <Tabs
-                value={tabValue}
-                onChange={handleTabValueChange}
+                Login
+              </Button>
+            </Box>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel-content"
+                id="panel-header"
               >
-                <Tab label='Login' />
-                <Tab label='Register' />
-              </Tabs>
-            </Grid>
-            <Grid item>
-              <TabPanel value={tabValue} index={0}>
-                <Stack
-                  spacing={2}
-                  alignItems='center'
+                <Typography align='center'>
+                  Want to try the app without registering?
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography
+                  align='center'
+                  sx={{ marginBottom: 1 }}
                 >
-                  <Avatar sx={{ bgcolor: 'secondary.main' }}>
-                    <LockOpenIcon />
-                  </Avatar>
-                  <Box component="form" onSubmit={handleLogin}>
-                    <Stack spacing={2}>
-                      <TextField
-                        name='username'
-                        label='Email'
-                        type='email'
-                        required={true}
-                        fullWidth
-                      />
-                      <TextField
-                        name='password'
-                        label='Password'
-                        type='password'
-                        required={true}
-                        fullWidth
-                      />
-                      <Button
-                        type='submit'
-                        color='primary'
-                        variant='contained'
-                        fullWidth
-                      >
-                        Login
-                      </Button>
-                    </Stack>
-                  </Box>
+                  Use the following test account:
+                </Typography>
+                <Typography align='center'>
+                  <strong>E-mail:</strong> test@budget-app.com
+                </Typography>
+                <Typography align='center'>
+                  <strong>Password:</strong> testBudget
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          </TabPanel>
 
-                  <Accordion>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel-content"
-                      id="panel-header"
-                    >
-                      <Typography align='center'>
-                        Want to try the app without registering?
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Grid
-                        container
-                        direction='column'
-                        spacing={1}
-                      >
-                        <Grid item>
-                          <Typography align='center'>
-                            Use the following test account:
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography align='center'>
-                            <strong>E-mail:</strong> test@budget-app.com
-                          </Typography>
-                          <Typography align='center'>
-                            <strong>Password:</strong> testBudget
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </AccordionDetails>
-                  </Accordion>
-                </Stack>
-              </TabPanel>
-              <TabPanel value={tabValue} index={1}>
-                <Stack
-                  spacing={2}
-                  alignItems='center'
-                >
-                  <Avatar sx={{ bgcolor: 'secondary.main' }}>
-                    <HowToRegIcon />
-                  </Avatar>
-                  <Box component="form" onSubmit={handleRegister}>
-                    <Stack spacing={2}>
-                      <TextField
-                        name='name'
-                        label='Name'
-                        required={true}
-                        fullWidth
-                      />
-                      <TextField
-                        name='username'
-                        label='Email'
-                        type='email'
-                        required={true}
-                        fullWidth
-                      />
-                      <TextField
-                        name='password'
-                        label='Password'
-                        type='password'
-                        required={true}
-                        fullWidth
-                      />
-                      <Button
-                        type='submit'
-                        color='primary'
-                        variant='contained'
-                        fullWidth
-                      >
-                        Register
-                      </Button>
-                    </Stack>
-                  </Box>
-                </Stack>
-              </TabPanel>
-            </Grid>
-          </Grid>
+          <TabPanel value={tabValue} index={1}>
+            <Avatar
+              sx={{
+                bgcolor: 'secondary.main',
+                marginBottom: 2
+              }}>
+              <HowToRegIcon />
+            </Avatar>
+            <Box
+              component="form"
+              onSubmit={handleRegister}
+              sx={{ width: "90%" }}
+            >
+              <TextField
+                name='name'
+                label='Name'
+                required={true}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <TextField
+                name='username'
+                label='Email'
+                type='email'
+                required={true}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <TextField
+                name='password'
+                label='Password'
+                type='password'
+                required={true}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <Button
+                type='submit'
+                color='primary'
+                variant='contained'
+                fullWidth
+              >
+                Register
+              </Button>
+            </Box>
+          </TabPanel>
         </CardContent>
       </Card>
     </Container>

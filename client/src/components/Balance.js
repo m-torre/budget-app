@@ -26,12 +26,27 @@ const Balance = () => {
   )
 
   return (
-    <Grid container spacing={2}>
+    <Grid
+      container
+      spacing={2}
+      sx={{ marginBottom: 2 }}
+    >
       <Grid item xs={12}>
         <Card>
           <CardContent>
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <IconContext.Provider value={{ size: '6em', style: { margin: 'auto' } }}>
+            <Box
+              sx={{ 
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <IconContext.Provider
+                value={{
+                  size: '6em',
+                  style: { margin: 'auto' }
+                }}
+              >
                 <GiMoneyStack />
               </IconContext.Provider>
             </Box>
@@ -51,7 +66,13 @@ const Balance = () => {
       <Grid item xs={6}>
         <Card>
           <CardContent>
-            <Box display="flex" alignItems="center" justifyContent="center">
+            <Box
+              sx={{ 
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
               <IconContext.Provider value={{ size: '4em' }}>
                 <GiReceiveMoney />
               </IconContext.Provider>
@@ -59,7 +80,7 @@ const Balance = () => {
             <Typography variant='h4' align='center'>
               Income
             </Typography>
-            <Typography variant='h5' align='center' style={{color:'#66bb6a'}}>
+            <Typography variant='h5' align='center' sx={{color: '#66bb6a'}}>
               +${getAmount(income).toFixed(2)}
             </Typography>
           </CardContent>
@@ -68,7 +89,13 @@ const Balance = () => {
       <Grid item xs={6}>
         <Card>
           <CardContent>
-            <Box display="flex" alignItems="center" justifyContent="center">
+            <Box
+              sx={{ 
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
               <IconContext.Provider value={{ size: '4em' }}>
                 <GiPayMoney />
               </IconContext.Provider>
@@ -76,7 +103,7 @@ const Balance = () => {
             <Typography variant='h4' align='center'>
               Expenses
             </Typography>
-            <Typography variant='h5' align='center' style={{color:'#ef5350'}}>
+            <Typography variant='h5' align='center' sx={{color: '#ef5350'}}>
               -${Math.abs(getAmount(expenses)).toFixed(2)}
             </Typography>
           </CardContent>
