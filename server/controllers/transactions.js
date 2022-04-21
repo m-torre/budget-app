@@ -66,7 +66,8 @@ router.put('/:id', transactionFinder, async (req, res) => {
     await req.transaction.update({
       name: req.body.name,
       amount: req.body.amount,
-      date: req.body.date
+      date: req.body.date,
+      category: req.body.category
     })
     await req.transaction.save()
     res.json(req.transaction)

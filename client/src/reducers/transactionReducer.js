@@ -12,6 +12,7 @@ const transactionReducer = (state = [], action) => {
       newState[index].name = action.data.name
       newState[index].amount = action.data.amount
       newState[index].date = action.data.date
+      newState[index].category = action.data.category
       return newState
     case 'DELETE_TRANSACTION':
       return state.filter(transaction => transaction.id !== action.data.id)

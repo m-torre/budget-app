@@ -4,22 +4,28 @@ import { createTransaction } from '../reducers/transactionReducer'
 import { makeStyles } from '@mui/styles'
 import DatePicker from '@mui/lab/DatePicker'
 import {
+  Box,
   Button,
   FormControl,
   FormControlLabel,
   FormLabel,
   InputAdornment,
+  InputLabel,
+  MenuItem,
   Radio,
   RadioGroup,
-  Stack,
+  Select,
   TextField
 } from '@mui/material'
+import { useSnackbar } from 'notistack'
 
 const TransactionForm = () => {
   const [type, setType] = useState('income')
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [category, setCategory] = useState('')
   
   const dispatch = useDispatch()
+  const { enqueueSnackbar } = useSnackbar()
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate)
@@ -32,13 +38,19 @@ const TransactionForm = () => {
       name: event.target.name.value,
       amount: Number(event.target.amount.value),
       date: selectedDate.toLocaleDateString(),
-      type: type
+      type: type,
+      category: category
     }
-    
+
     event.target.name.value = ''
     event.target.amount.value = ''
+    setCategory('')
+    setSelectedDate(new Date())
 
     dispatch(createTransaction(content))
+    enqueueSnackbar('Transaction added', { 
+      variant: 'success',
+    })
   }
 
   const useStyles = makeStyles((theme) => ({
@@ -52,21 +64,46 @@ const TransactionForm = () => {
         color: '#ef5350' 
       }
     },
-    checked: {},
-    form: {
-      width: '245px'
-    }
+    checked: {}
   }))
 
   const classes = useStyles()
 
+  const incomeCategories = [
+    "Paycheck",
+    "Bonus",
+    "Rental Income",
+    "Investment",
+    "Interest Income",
+    "Reimbursement",
+    "Miscellaneous"
+  ]
+
+  const expenseCategories = [
+    "Food",
+    "Housing",
+    "Bills & Utilities",
+    "Transportation",    
+    "Medical & Healthcare",
+    "Insurance",
+    "Personal Care",
+    "Entertainment",
+    "Education",
+    "Shopping",
+    "Miscellaneous"
+  ]
+
   return (
-    <Stack
-      spacing={1}
-      alignItems='center'
-      className={classes.form}  
+    <Box
+      component="form"
+      onSubmit={addTransaction}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }}
     >
-      <FormControl>
+      <FormControl sx={{ marginBottom: 2 }}>
         <FormLabel
           id='type-radio-buttons-group-label'
           sx={{ margin: 'auto' }}
@@ -76,7 +113,7 @@ const TransactionForm = () => {
         <RadioGroup
           aria-labelledby='type-radio-buttons-group-label'
           defaultValue='income'
-          name='radio-buttons-group'
+          name='type-radio-buttons-group'
           onChange={(event) => setType(event.target.value)}
         >
           <FormControlLabel
@@ -91,43 +128,60 @@ const TransactionForm = () => {
           />
         </RadioGroup>
       </FormControl>
+      <FormControl sx={{ marginBottom: 2 }} fullWidth>
+        <InputLabel id="category-select-label">Category</InputLabel>
+        <Select
+          labelId="category-select-label"
+          id="category-select"
+          value={category}
+          label="Category"
+          autoWidth={true}
+          onChange={(event) => setCategory(event.target.value)}
+          fullWidth
+        >
+          {
+            type === "expense"
+            ? expenseCategories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)
+            : incomeCategories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)
+          }
+        </Select>
+      </FormControl>
       <DatePicker
-          label='Date'
-          value={selectedDate}
-          onChange={handleDateChange}
-          renderInput={(params) => <TextField {...params} fullWidth/>}
-        />
-      <form onSubmit={addTransaction}>
-        <Stack spacing={1}>
-            <TextField
-              name='name'
-              label='Name'
-              required={true}
-              fullWidth
-            />
-            <TextField
-              name='amount'
-              label='Amount'
-              type='number'
-              required={true}
-              inputProps={{
-                step:'0.01'
-              }}
-              InputProps={{
-                startAdornment: <InputAdornment position='start'>$</InputAdornment>,
-              }}
-              fullWidth
-            />
-            <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-            >
-              Add
-            </Button>
-        </Stack>
-      </form>
-    </Stack>
+        label='Date'
+        value={selectedDate}
+        onChange={handleDateChange}
+        renderInput={(params) => <TextField {...params} fullWidth sx={{ marginBottom: 2 }}/>}
+      />
+      <TextField
+        name='name'
+        label='Name'
+        required={true}
+        fullWidth
+        sx={{ marginBottom: 2 }}
+      />
+      <TextField
+        name='amount'
+        label='Amount'
+        type='number'
+        required={true}
+        inputProps={{
+          step:'0.01'
+        }}
+        InputProps={{
+          startAdornment: <InputAdornment position='start'>$</InputAdornment>,
+        }}
+        fullWidth
+        sx={{ marginBottom: 2 }}
+      />
+      <Button
+        variant='contained'
+        color='primary'
+        type='submit'
+        fullWidth
+      >
+        Add
+      </Button>
+    </Box>
   )
 }
 

@@ -5,6 +5,7 @@ import {
     TableBody,
     TableCell,
     TableContainer,
+    TableHead,
     TablePagination,
     TableRow,
     Typography
@@ -40,12 +41,17 @@ const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDia
         </Typography>
       </TableCell>
       <TableCell align='center'>
+        <Typography variant='body1'>
+          {transaction.category}
+        </Typography>
+      </TableCell>
+      <TableCell align='center'>
         <Typography
           variant='body1'
           style={
-              transaction.type === 'income'
-              ? {color:"#66bb6a"}
-              : {color:"#ef5350"}
+            transaction.type === 'income'
+            ? {color:"#66bb6a"}
+            : {color:"#ef5350"}
           }
         >
           {
@@ -56,8 +62,8 @@ const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDia
         </Typography>
       </TableCell>
       {
-        options &&  
-        <TableCell align='center'>
+        options && (
+        <TableCell align='right'>
           <IconButton
             aria-label="edit"
             onClick={() => editTransaction()}
@@ -65,10 +71,10 @@ const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDia
             <EditIcon />
           </IconButton>
         </TableCell>
-      }
+      )}
       {
-        options &&
-        <TableCell align='center'>
+        options && (
+        <TableCell align='right'>
           <IconButton
             aria-label="delete"
             onClick={handleDelete}
@@ -76,7 +82,7 @@ const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDia
             <DeleteIcon />
           </IconButton>
         </TableCell>
-      }
+      )}
     </TableRow>
   )
 }
@@ -102,6 +108,38 @@ const TransactionList = ({ transactions, options }) => {
     <>
       <TableContainer>
         <Table sx={{width: '90%', margin: 'auto'}}>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">
+                <Typography variant='h6'>
+                  Name
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant='h6'>
+                  Date
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant='h6'>
+                  Category
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant='h6'>
+                  Amount
+                </Typography>
+              </TableCell>
+              {
+                options && (
+                <TableCell align="center" colSpan={2}>
+                  <Typography variant='h6'>
+                    Options
+                  </Typography>
+                </TableCell>
+              )}
+            </TableRow>
+          </TableHead>
           <TableBody>
             {transactions
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -129,21 +167,21 @@ const TransactionList = ({ transactions, options }) => {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
       {
-        openModal &&
+        openModal && (
         <EditTransactionModal
           open={openModal}
           handleClose={() => setOpenModal(false)}
           id={editId}
         />
-      }
+      )}
       {
-        openDialog &&
+        openDialog && (
         <DeleteTransactionDialog
           open={openDialog}
           handleClose={() => setOpenDialog(false)}
           id={deleteId}
         />
-      }
+      )}
     </>
   )
 }
