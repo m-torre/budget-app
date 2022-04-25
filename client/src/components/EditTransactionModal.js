@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { modifyTransaction } from '../reducers/transactionReducer'
+import useTransactions from '../hooks/useTransactions'
 import { makeStyles } from '@mui/styles'
 import { DatePicker } from '@mui/lab'
 import {
@@ -33,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const EditTransactionModal = ({ open, handleClose, id }) => {
-  let transaction = useSelector(state => state.transactions.find(transaction => transaction.id === id))
+  const transactions = useTransactions()
+  const transaction = transactions.find(id)
 
   const [category, setCategory] = useState(transaction.category)
 
@@ -44,7 +44,6 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
     setSelectedDate(newDate)
   }
 
-  const dispatch = useDispatch()
   const { enqueueSnackbar } = useSnackbar()
 
   const editTransaction = (event) => {
@@ -58,7 +57,7 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
       id: id
     }
 
-    dispatch(modifyTransaction(id, content))
+    transactions.modify(id, content)
     enqueueSnackbar('Transaction edited', { 
       variant: 'success',
     })
@@ -68,29 +67,8 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
 
   const classes = useStyles()
 
-  const incomeCategories = [
-    "Paycheck",
-    "Bonus",
-    "Rental Income",
-    "Investment",
-    "Interest Income",
-    "Reimbursement",
-    "Miscellaneous"
-  ]
-
-  const expenseCategories = [
-    "Food",
-    "Housing",
-    "Bills & Utilities",
-    "Transportation",    
-    "Medical & Healthcare",
-    "Insurance",
-    "Personal Care",
-    "Entertainment",
-    "Education",
-    "Shopping",
-    "Miscellaneous"
-  ]
+  const incomeCategories = transactions.getIncomeCategories()
+  const expensesCategories = transactions.getExpensesCategories()
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -112,7 +90,8 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
             alignSelf: "center",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center"
+            alignItems: "center",
+            gap: 2
           }}
         >
           <TextField
@@ -121,22 +100,20 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
             defaultValue={transaction.name}
             required={true}
             fullWidth
-            sx={{ marginBottom: 2 }}
           />
-          <FormControl sx={{ marginBottom: 2 }} fullWidth>
+          <FormControl fullWidth>
             <InputLabel id="category-select-label">Category</InputLabel>
             <Select
               labelId="category-select-label"
               id="category-select"
               value={category}
               label="Category"
-              autoWidth={true}
               onChange={(event) => setCategory(event.target.value)}
               fullWidth
             >
               {
                 transaction.type === "expense"
-                ? expenseCategories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)
+                ? expensesCategories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)
                 : incomeCategories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)
               }
             </Select>
@@ -146,7 +123,7 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
             value={selectedDate}
             onChange={handleDateChange}
             renderInput={(params) =>
-              <TextField {...params} fullWidth sx={{ marginBottom: 2 }} />
+              <TextField {...params} fullWidth />
             }
           />
           <TextField
@@ -162,7 +139,6 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
               startAdornment: <InputAdornment position='start'>$</InputAdornment>,
             }}
             fullWidth
-            sx={{ marginBottom: 2 }}
           />
           <Button
             variant='contained'

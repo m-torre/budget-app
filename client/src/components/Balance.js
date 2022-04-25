@@ -1,5 +1,6 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import useTransactions from '../hooks/useTransactions'
+import { getAmount } from '../utils'
 import {
   Box,
   Card,
@@ -11,25 +12,12 @@ import { IconContext } from 'react-icons'
 import { GiMoneyStack, GiReceiveMoney, GiPayMoney } from 'react-icons/gi'
 
 const Balance = () => {
-  const user = useSelector(state => state.user)
-  const transactions = useSelector(state => state.transactions.filter(transaction => transaction.user.name === user.name))
-  const income = transactions.filter(transaction => transaction.type === 'income')
-  const expenses = transactions.filter(transaction => transaction.type === 'expense')
-
-  const getAmount = (transactions) => (
-    transactions.reduce((sum, transaction) =>
-      transaction.type === 'income'
-      ? sum + Number(transaction.amount)
-      : sum - Number(transaction.amount),
-      0
-    )
-  )
+  const transactions = useTransactions()
 
   return (
     <Grid
       container
       spacing={2}
-      sx={{ marginBottom: 2 }}
     >
       <Grid item xs={12}>
         <Card>
@@ -55,9 +43,9 @@ const Balance = () => {
             </Typography>
             <Typography variant='h1' align='center'>
               {
-                getAmount(transactions) >= 0
-                ? `$${getAmount(transactions).toFixed(2)}`
-                : `-$${Math.abs(getAmount(transactions)).toFixed(2)}`
+                getAmount(transactions.list) >= 0
+                ? `$${getAmount(transactions.list).toFixed(2)}`
+                : `-$${Math.abs(getAmount(transactions.list)).toFixed(2)}`
               }
             </Typography>
           </CardContent>
@@ -81,7 +69,7 @@ const Balance = () => {
               Income
             </Typography>
             <Typography variant='h5' align='center' sx={{color: '#66bb6a'}}>
-              +${getAmount(income).toFixed(2)}
+              +${getAmount(transactions.income).toFixed(2)}
             </Typography>
           </CardContent>
         </Card>
@@ -104,7 +92,7 @@ const Balance = () => {
               Expenses
             </Typography>
             <Typography variant='h5' align='center' sx={{color: '#ef5350'}}>
-              -${Math.abs(getAmount(expenses)).toFixed(2)}
+              -${Math.abs(getAmount(transactions.expenses)).toFixed(2)}
             </Typography>
           </CardContent>
         </Card>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import useTransactions from '../hooks/useTransactions'
 import {
   Card,
   CardContent,
@@ -9,8 +9,7 @@ import HistoryIcon from '@mui/icons-material/History'
 import TransactionList from './TransactionList'
 
 const History = () => {
-  const user = useSelector(state => state.user)
-  const transactions = useSelector(state => state.transactions.filter(transaction => transaction.user.name === user.name))
+  const transactions = useTransactions()
 
   return (
     <Card>
@@ -33,8 +32,8 @@ const History = () => {
           History
         </Typography>
         {
-          transactions.length > 0
-          ? <TransactionList transactions={transactions} options={false}/>
+          transactions.list.length > 0
+          ? <TransactionList transactions={transactions.list} options={false}/>
           : <Typography variant='body1' align='center'>No transactions yet</Typography>
         }
       </CardContent>

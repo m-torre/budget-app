@@ -2,17 +2,17 @@ const jwt = require('jsonwebtoken')
 const router = require('express').Router()
 
 const { request } = require('express')
-const { Transaction, User } = require('../models')
+const { Budget, User } = require('../models')
 
 router.get('/', async (req, res) => {
-  const transactions = await Transaction.findAll({
+  const budgets = await Budget.findAll({
     attributes: { exclude: ['userId'] },
     include: {
       model: User,
       attributes: ['name']
     }
   })
-  res.json(transactions)
+  res.json(budgets)
 })
 
 const tokenExtractor = (req, res, next) => {
@@ -32,46 +32,43 @@ const tokenExtractor = (req, res, next) => {
 router.post('/', tokenExtractor, async (req, res) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
-    const transaction = await Transaction.create({ ...req.body, userId: user.id })
-    delete transaction.dataValues.userId
-    transaction.dataValues.user = { name: user.name }
-    res.json(transaction)
+    const budget = await Budget.create({ ...req.body, userId: user.id })
+    delete budget.dataValues.userId
+    budget.dataValues.user = { name: user.name }
+    res.json(budget)
   } catch(error) {
     return res.status(400).json({ error })
   }
 })
 
-const transactionFinder = async (req, res, next) => {
-  req.transaction = await Transaction.findByPk(req.params.id)
+const budgetFinder = async (req, res, next) => {
+  req.budget = await Budget.findByPk(req.params.id)
   next()
 }
 
-router.get('/:id', transactionFinder, async (req, res) => {
-  if (req.transaction) {
-    res.json(req.transaction)
+router.get('/:id', budgetFinder, async (req, res) => {
+  if (req.budget) {
+    res.json(req.budget)
   } else {
     res.status(404).end()
   }
 })
 
-router.put('/:id', tokenExtractor, transactionFinder, async (req, res) => {
-  if (req.transaction) {
-    await req.transaction.update({
-      name: req.body.name,
-      amount: req.body.amount,
-      date: req.body.date,
-      category: req.body.category
+router.put('/:id', tokenExtractor, budgetFinder, async (req, res) => {
+  if (req.budget) {
+    await req.budget.update({
+      amount: req.body.amount
     })
-    await req.transaction.save()
-    res.json(req.transaction)
+    await req.budget.save()
+    res.json(req.budget)
   } else {
     res.status(404).end()
   }
 })
 
-router.delete('/:id', tokenExtractor, transactionFinder, async (req, res) => {
-  if (req.transaction) {
-    await req.transaction.destroy()
+router.delete('/:id', tokenExtractor, budgetFinder, async (req, res) => {
+  if (req.budget) {
+    await req.budget.destroy()
   }
   res.status(204).end()
 })

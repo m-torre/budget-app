@@ -1,5 +1,5 @@
 import React from 'react'
-import useTransactions from '../hooks/useTransactions'
+import useBudgets from '../hooks/useBudgets'
 import {
   Button,
   Dialog,
@@ -9,13 +9,13 @@ import {
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
 
-const DeleteTransactionDialog = ({ open, handleClose, id }) => {
-  const transactions = useTransactions()
+const DeleteBudgetDialog = ({ open, handleClose, id }) => {
+  const budgets = useBudgets()
   const { enqueueSnackbar } = useSnackbar()
 
   const handleAgree = () => {
-    transactions.remove(id)
-    enqueueSnackbar('Transaction deleted', { 
+    budgets.remove(id)
+    enqueueSnackbar('Budget deleted', { 
       variant: 'success',
     })
     handleClose()
@@ -29,7 +29,7 @@ const DeleteTransactionDialog = ({ open, handleClose, id }) => {
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
         <DialogContentText>
-          Delete this transaction?
+          Delete this budget?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -40,4 +40,4 @@ const DeleteTransactionDialog = ({ open, handleClose, id }) => {
   )
 }
 
-export default DeleteTransactionDialog
+export default DeleteBudgetDialog

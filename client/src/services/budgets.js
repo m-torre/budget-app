@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = '/api/transactions'
+const baseUrl = '/api/budgets'
 
 let token = null
 
@@ -29,7 +29,7 @@ const update = async (id, newObject) => {
   return response.data
 }
 
-const deleteTransaction = async id => {
+const deleteBudget = async id => {
   const config = {
     headers: { Authorization: token }
   }
@@ -37,4 +37,4 @@ const deleteTransaction = async id => {
   return response.data
 }
 
-export default { getAll, create, update, deleteTransaction, setToken }
+export default { getAll, create, update, deleteBudget, setToken }

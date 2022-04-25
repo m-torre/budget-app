@@ -104,6 +104,15 @@ const ResponsiveAppBar = () => {
                   Transactions
                 </Typography>
               </MenuItem>
+              <MenuItem
+                component={Link}
+                to="/budgets"
+                onClick={handleCloseNavMenu}
+              >
+                <Typography textAlign="center">
+                  Budgets
+                </Typography>
+              </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <Typography textAlign="center">
                   Logout
@@ -142,6 +151,13 @@ const ResponsiveAppBar = () => {
               to="/transactions"
             >
               Transactions
+            </Button>
+            <Button
+              color="inherit"
+              component={Link}
+              to="/budgets"
+            >
+              Budgets
             </Button>
             <Button
               color="inherit"

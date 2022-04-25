@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { createTransaction } from '../reducers/transactionReducer'
+import useTransactions from '../hooks/useTransactions'
 import { makeStyles } from '@mui/styles'
 import DatePicker from '@mui/lab/DatePicker'
 import {
@@ -24,7 +23,7 @@ const TransactionForm = () => {
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [category, setCategory] = useState('')
   
-  const dispatch = useDispatch()
+  const transactions = useTransactions()
   const { enqueueSnackbar } = useSnackbar()
 
   const handleDateChange = (newDate) => {
@@ -33,7 +32,7 @@ const TransactionForm = () => {
   
   const addTransaction = (event) => {
     event.preventDefault()
-  
+
     const content = {
       name: event.target.name.value,
       amount: Number(event.target.amount.value),
@@ -47,7 +46,7 @@ const TransactionForm = () => {
     setCategory('')
     setSelectedDate(new Date())
 
-    dispatch(createTransaction(content))
+    transactions.create(content)
     enqueueSnackbar('Transaction added', { 
       variant: 'success',
     })
@@ -69,29 +68,8 @@ const TransactionForm = () => {
 
   const classes = useStyles()
 
-  const incomeCategories = [
-    "Paycheck",
-    "Bonus",
-    "Rental Income",
-    "Investment",
-    "Interest Income",
-    "Reimbursement",
-    "Miscellaneous"
-  ]
-
-  const expenseCategories = [
-    "Food",
-    "Housing",
-    "Bills & Utilities",
-    "Transportation",    
-    "Medical & Healthcare",
-    "Insurance",
-    "Personal Care",
-    "Entertainment",
-    "Education",
-    "Shopping",
-    "Miscellaneous"
-  ]
+  const incomeCategories = transactions.getIncomeCategories()
+  const expensesCategories = transactions.getExpensesCategories()
 
   return (
     <Box
@@ -100,10 +78,11 @@ const TransactionForm = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
+        gap: 2
       }}
     >
-      <FormControl sx={{ marginBottom: 2 }}>
+      <FormControl>
         <FormLabel
           id='type-radio-buttons-group-label'
           sx={{ margin: 'auto' }}
@@ -128,20 +107,20 @@ const TransactionForm = () => {
           />
         </RadioGroup>
       </FormControl>
-      <FormControl sx={{ marginBottom: 2 }} fullWidth>
+      <FormControl fullWidth>
         <InputLabel id="category-select-label">Category</InputLabel>
         <Select
           labelId="category-select-label"
           id="category-select"
           value={category}
           label="Category"
-          autoWidth={true}
+          required={true}
           onChange={(event) => setCategory(event.target.value)}
           fullWidth
         >
           {
             type === "expense"
-            ? expenseCategories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)
+            ? expensesCategories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)
             : incomeCategories.map(category => <MenuItem value={category} key={category}>{category}</MenuItem>)
           }
         </Select>
@@ -150,14 +129,13 @@ const TransactionForm = () => {
         label='Date'
         value={selectedDate}
         onChange={handleDateChange}
-        renderInput={(params) => <TextField {...params} fullWidth sx={{ marginBottom: 2 }}/>}
+        renderInput={(params) => <TextField {...params} fullWidth />}
       />
       <TextField
         name='name'
         label='Name'
         required={true}
         fullWidth
-        sx={{ marginBottom: 2 }}
       />
       <TextField
         name='amount'
@@ -171,7 +149,6 @@ const TransactionForm = () => {
           startAdornment: <InputAdornment position='start'>$</InputAdornment>,
         }}
         fullWidth
-        sx={{ marginBottom: 2 }}
       />
       <Button
         variant='contained'

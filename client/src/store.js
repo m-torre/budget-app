@@ -4,10 +4,12 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 
 import transactionReducer from './reducers/transactionReducer'
 import userReducer from './reducers/userReducer'
+import budgetReducer from './reducers/budgetReducer'
 
 
 const reducer = combineReducers({
   transactions: transactionReducer,
+  budgets: budgetReducer,
   user: userReducer
 })
 

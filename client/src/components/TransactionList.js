@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import useModal from '../hooks/useModal'
 import {
     IconButton,
     Table,
@@ -17,15 +18,15 @@ import {
 import EditTransactionModal from './EditTransactionModal'
 import DeleteTransactionDialog from './DeleteTransactionDialog'
 
-const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDialog, setDeleteId }) => {
-  const handleDelete = () => {
-    setOpenDialog(true)
-    setDeleteId(transaction.id)
+const Transaction = ({ transaction, options, editModalControl, deleteDialogControl }) => {
+  const handleEdit = () => {
+    editModalControl.openModal()
+    editModalControl.setTargetId(transaction.id)
   }
-
-  const editTransaction = () => {
-    setOpenModal(true)
-    setEditId(transaction.id)
+  
+  const handleDelete = () => {
+    deleteDialogControl.openModal()
+    deleteDialogControl.setTargetId(transaction.id)
   }
 
   return (
@@ -66,7 +67,7 @@ const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDia
         <TableCell align='right'>
           <IconButton
             aria-label="edit"
-            onClick={() => editTransaction()}
+            onClick={handleEdit}
           >
             <EditIcon />
           </IconButton>
@@ -90,10 +91,8 @@ const Transaction = ({ transaction, options, setOpenModal, setEditId, setOpenDia
 const TransactionList = ({ transactions, options }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [openModal, setOpenModal] = useState(false)
-  const [editId, setEditId] = useState('')
-  const [openDialog, setOpenDialog] = useState(false)
-  const [deleteId, setDeleteId] = useState('')
+  const editModalControl = useModal()
+  const deleteDialogControl = useModal()
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -148,10 +147,8 @@ const TransactionList = ({ transactions, options }) => {
                   key={transaction.id}
                   transaction={transaction}
                   options={options}
-                  setOpenModal={setOpenModal}
-                  setEditId={setEditId}
-                  setOpenDialog={setOpenDialog}
-                  setDeleteId={setDeleteId}
+                  editModalControl={editModalControl}
+                  deleteDialogControl={deleteDialogControl}
                 />
             )}
           </TableBody>
@@ -167,19 +164,19 @@ const TransactionList = ({ transactions, options }) => {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
       {
-        openModal && (
+        editModalControl.getOpenStatus() && (
         <EditTransactionModal
-          open={openModal}
-          handleClose={() => setOpenModal(false)}
-          id={editId}
+          open={editModalControl.getOpenStatus()}
+          handleClose={editModalControl.closeModal}
+          id={editModalControl.getTargetId()}
         />
       )}
       {
-        openDialog && (
+        deleteDialogControl.getOpenStatus() && (
         <DeleteTransactionDialog
-          open={openDialog}
-          handleClose={() => setOpenDialog(false)}
-          id={deleteId}
+          open={deleteDialogControl.getOpenStatus()}
+          handleClose={deleteDialogControl.closeModal}
+          id={deleteDialogControl.getTargetId()}
         />
       )}
     </>

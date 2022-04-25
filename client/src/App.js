@@ -7,15 +7,19 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser } from './reducers/userReducer'
 import { initializeTransactions } from './reducers/transactionReducer'
+import { initializeBudgets } from './reducers/budgetReducer'
 import transactionService from './services/transactions'
 import { ThemeProvider } from '@mui/material/styles'
 import { CssBaseline } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DateAdapter from '@mui/lab/AdapterDateFns'
 import ResponsiveAppBar from './components/ResponsiveAppBar'
 import Login from './components/Login'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './components/Home'
 import Transactions from './components/Transactions'
+import Budgets from './components/Budgets'
 import Footer from './components/Footer'
 import theme from './theme'
 
@@ -35,6 +39,7 @@ const App = () => {
   
   useEffect(() => {
     dispatch(initializeTransactions())
+    dispatch(initializeBudgets())
   }, [dispatch])
 
   return (
@@ -47,31 +52,37 @@ const App = () => {
             horizontal: 'center',
           }}
         >
-          <CssBaseline />
-          { user && <ResponsiveAppBar /> }
-          <Routes>
-            <Route
-              index
-              element={<Login />}
-            />
-            <Route
-              path="login"
-              element={<Login />}
-            />
-            <Route
-              element={<ProtectedRoute isAllowed={!!user} />}
-            >
+          <LocalizationProvider dateAdapter={DateAdapter}>
+            <CssBaseline />
+            { user && <ResponsiveAppBar /> }
+            <Routes>
               <Route
-                path="home"
-                element={<Home />}
+                index
+                element={<Login />}
               />
               <Route
-                path="transactions"
-                element={<Transactions />}
+                path="login"
+                element={<Login />}
               />
-            </Route>
-          </Routes>
-          <Footer />
+              <Route
+                element={<ProtectedRoute isAllowed={!!user} />}
+              >
+                <Route
+                  path="home"
+                  element={<Home />}
+                />
+                <Route
+                  path="transactions"
+                  element={<Transactions />}
+                />
+                <Route
+                  path="budgets"
+                  element={<Budgets />}
+                />
+              </Route>
+            </Routes>
+            <Footer />
+          </LocalizationProvider>
         </SnackbarProvider>
       </ThemeProvider>
     </Router>
