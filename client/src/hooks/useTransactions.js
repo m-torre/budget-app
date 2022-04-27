@@ -1,8 +1,9 @@
+import { useAuth } from '../contexts/authContext'
 import { useDispatch, useSelector } from 'react-redux'
 import { createTransaction, modifyTransaction, deleteTransaction } from '../reducers/transactionReducer'
 
 const useTransactions = () => {
-  const user = useSelector(state => state.user)
+  const { user } = useAuth()
   const list = useSelector(state => state.transactions.filter(transaction => transaction.user.name === user.name))
   const income = list.filter(transaction => transaction.type === 'income')
   const expenses = list.filter(transaction => transaction.type === 'expense')

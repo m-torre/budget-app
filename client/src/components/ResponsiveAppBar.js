@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
+import { useAuth } from '../contexts/authContext'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { clearUser } from '../reducers/userReducer'
 import {
   AppBar,
   Box,
@@ -27,11 +26,10 @@ const ResponsiveAppBar = () => {
     setAnchorElNav(null)
   }
 
-  const dispatch = useDispatch()
+  const { logout } = useAuth()
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBudgetAppUser')
-    dispatch(clearUser())
+    logout()
   }
 
   return (

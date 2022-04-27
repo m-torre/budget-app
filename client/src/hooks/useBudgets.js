@@ -1,12 +1,13 @@
+import { useAuth } from '../contexts/authContext'
 import { useDispatch, useSelector } from 'react-redux'
 import { createBudget, modifyBudget, deleteBudget } from '../reducers/budgetReducer'
 
 const useBudgets = () => {
-  const user = useSelector(state => state.user)
+  const { user } = useAuth()
   const list = useSelector(state => state.budgets.filter(budget => budget.user.name === user.name))
 
   const dispatch = useDispatch()
-
+  
   const create = (content) => {
     dispatch(createBudget(content))
   }

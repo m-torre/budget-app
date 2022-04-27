@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import loginService from '../services/login'
+import { useAuth } from '../contexts/authContext'
 import userService from '../services/users'
-import transactionService from '../services/transactions'
-import { useDispatch, useSelector } from 'react-redux'
-import { setUser } from '../reducers/userReducer'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import {
   Avatar,
   Accordion,
@@ -32,9 +28,11 @@ const TabPanel = ({ children, value, index, ...other }) => (
     {value === index && (
       <Box
         sx={{
+          alignSelf: "stretch",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center"
+          alignItems: "center",
+          gap: 2
         }}
       >
         {children}
@@ -44,41 +42,33 @@ const TabPanel = ({ children, value, index, ...other }) => (
 )
 
 const Login = () => {
-  const user = useSelector(state => state.user)
   const [tabValue, setTabValue] = useState(0)
 
+  const navigate = useNavigate()
+  const location = useLocation()
+  const origin = location.state?.from?.pathname || '/home'
+  const { enqueueSnackbar } = useSnackbar()
+  const { user, login } = useAuth()
+  
   const handleTabValueChange = (event, newValue) => {
     setTabValue(newValue)
   }
-
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar()
 
   const handleLogin = async (event) => {
     event.preventDefault()
 
     try {
-      const user = await loginService.login({
-        username: event.target.username.value,
-        password: event.target.password.value
-      })
-      
-      window.localStorage.setItem(
-        'loggedBudgetAppUser', JSON.stringify(user)
-      ) 
-      transactionService.setToken(user.token)
-      dispatch(setUser(user))
-      
+      login(event.target.username.value, event.target.password.value)
+
       event.target.username.value = ''
       event.target.password.value = ''
 
-      navigate('/home')
+      navigate(origin)
     } catch (exception) {
+      console.log('Wrong credentials')
       enqueueSnackbar('Invalid email or password', { 
         variant: 'error',
       })
-      console.log('Wrong credentials')
     }
   }
 
@@ -108,27 +98,30 @@ const Login = () => {
   }
 
   if (user) {
-    return <Navigate to={"/home"} replace />
+    return <Navigate to={origin} replace />
   }
 
   return (
     <Container
       component="main"
       maxWidth='xs'
-      sx={{ paddingTop: 5 }}
+      sx={{
+        paddingTop: 5,
+        paddingBottom: 10.5
+      }}
     >
       <Card>
         <CardContent
           sx={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center"
+            flexDirection: "column"
           }}
         >
           <Typography
             component="h1"
             variant='h3'
             sx={{
+              alignSelf: "center",
               display: 'flex',
               alignItems: 'center',
               columnGap: 0.5,
@@ -145,27 +138,27 @@ const Login = () => {
           <Tabs
             value={tabValue}
             onChange={handleTabValueChange}
-            sx={{ marginBottom: 2 }}
+            sx={{
+              alignSelf: "center",
+              marginBottom: 2
+            }}
           >
             <Tab label='Login' />
             <Tab label='Register' />
           </Tabs>
             
           <TabPanel value={tabValue} index={0}>
-            <Avatar
-              sx={{
-                bgcolor: 'secondary.main',
-                marginBottom: 2
-              }}
-            >
+            <Avatar sx={{ bgcolor: 'secondary.main' }}>
               <LockOpenIcon />
             </Avatar>
             <Box
               component="form"
               onSubmit={handleLogin}
               sx={{
-                width: "90%",
-                marginBottom: 2
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                width: "90%"
               }}
             >
               <TextField
@@ -174,7 +167,6 @@ const Login = () => {
                 type='email'
                 required={true}
                 fullWidth
-                sx={{ marginBottom: 2 }}
               />
               <TextField
                 name='password'
@@ -182,7 +174,6 @@ const Login = () => {
                 type='password'
                 required={true}
                 fullWidth
-                sx={{ marginBottom: 2 }}
               />
               <Button
                 type='submit'
@@ -221,24 +212,24 @@ const Login = () => {
           </TabPanel>
 
           <TabPanel value={tabValue} index={1}>
-            <Avatar
-              sx={{
-                bgcolor: 'secondary.main',
-                marginBottom: 2
-              }}>
+            <Avatar sx={{ bgcolor: 'secondary.main' }}>
               <HowToRegIcon />
             </Avatar>
             <Box
               component="form"
               onSubmit={handleRegister}
-              sx={{ width: "90%" }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                width: "90%"
+              }}
             >
               <TextField
                 name='name'
                 label='Name'
                 required={true}
                 fullWidth
-                sx={{ marginBottom: 2 }}
               />
               <TextField
                 name='username'
@@ -246,7 +237,6 @@ const Login = () => {
                 type='email'
                 required={true}
                 fullWidth
-                sx={{ marginBottom: 2 }}
               />
               <TextField
                 name='password'
@@ -254,7 +244,6 @@ const Login = () => {
                 type='password'
                 required={true}
                 fullWidth
-                sx={{ marginBottom: 2 }}
               />
               <Button
                 type='submit'

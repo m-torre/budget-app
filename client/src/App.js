@@ -4,11 +4,10 @@ import {
   Route,
   Routes
 } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { setUser } from './reducers/userReducer'
+import { useDispatch } from 'react-redux'
 import { initializeTransactions } from './reducers/transactionReducer'
 import { initializeBudgets } from './reducers/budgetReducer'
-import transactionService from './services/transactions'
+import { useAuth } from './contexts/authContext'
 import { ThemeProvider } from '@mui/material/styles'
 import { CssBaseline } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
@@ -24,18 +23,8 @@ import Footer from './components/Footer'
 import theme from './theme'
 
 const App = () => {
-  const user = useSelector(state => state.user)
-
+  const { user } = useAuth()
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBudgetAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      dispatch(setUser(user))
-      transactionService.setToken(user.token)
-    }
-  }, [dispatch])
   
   useEffect(() => {
     dispatch(initializeTransactions())
