@@ -13,6 +13,7 @@ import { CssBaseline } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import DateAdapter from '@mui/lab/AdapterDateFns'
+import theme from './theme'
 import ResponsiveAppBar from './components/ResponsiveAppBar'
 import Login from './components/Login'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -20,7 +21,7 @@ import Home from './components/Home'
 import Transactions from './components/Transactions'
 import Budgets from './components/Budgets'
 import Footer from './components/Footer'
-import theme from './theme'
+import NoMatch from './components/NoMatch'
 
 const App = () => {
   const { user } = useAuth()
@@ -69,6 +70,10 @@ const App = () => {
                   element={<Budgets />}
                 />
               </Route>
+              <Route
+                path="*"
+                element={<NoMatch />}
+              />
             </Routes>
             <Footer />
           </LocalizationProvider>
