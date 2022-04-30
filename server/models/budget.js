@@ -16,7 +16,7 @@ Budget.init({
     allowNull: false,
     validate: {
       notEmpty: true,
-      isAlpha: true
+      is: /^([a-zA-Z&\s])*$/
     }
   },
   amount: {
