@@ -15,16 +15,25 @@ User.init({
     unique: true,
     allowNull: false,
     validate: {
+      notEmpty: true,
       isEmail: true
     }
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      is: /^([a-zA-Z]+\s)*[a-zA-Z]+$/,
+      len: [3,]
+    }
   },
   passwordHash: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   }
 }, {
   sequelize,

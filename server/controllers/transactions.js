@@ -35,15 +35,21 @@ router.post('/', tokenExtractor, async (req, res) => {
     const transaction = await Transaction.create({ ...req.body, userId: user.id })
     delete transaction.dataValues.userId
     transaction.dataValues.user = { name: user.name }
-    res.json(transaction)
+    res.status(201).json(transaction)
   } catch(error) {
     return res.status(400).json({ error })
   }
 })
 
 const transactionFinder = async (req, res, next) => {
-  req.transaction = await Transaction.findByPk(req.params.id)
-  next()
+  if (Number.isInteger(Number(req.params.id)))
+  {
+    req.transaction = await Transaction.findByPk(req.params.id)
+    next()
+  }
+  else {
+    res.status(400).end()
+  }
 }
 
 router.get('/:id', transactionFinder, async (req, res) => {
@@ -56,14 +62,18 @@ router.get('/:id', transactionFinder, async (req, res) => {
 
 router.put('/:id', tokenExtractor, transactionFinder, async (req, res) => {
   if (req.transaction) {
-    await req.transaction.update({
-      name: req.body.name,
-      amount: req.body.amount,
-      date: req.body.date,
-      category: req.body.category
-    })
-    await req.transaction.save()
-    res.json(req.transaction)
+    try {
+      await req.transaction.update({
+        name: req.body.name,
+        amount: req.body.amount,
+        date: req.body.date,
+        category: req.body.category
+      })
+      await req.transaction.save()
+      res.json(req.transaction)
+    } catch(error) {
+      return res.status(400).json({ error })
+    }
   } else {
     res.status(404).end()
   }

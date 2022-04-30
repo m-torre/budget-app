@@ -4,8 +4,8 @@ const router = require('express').Router()
 
 const User = require('../models/user')
 
-router.post('/', async (request, response) => {
-  const body = request.body
+router.post('/', async (req, res) => {
+  const body = req.body
 
   const user = await User.findOne({
     where: {
@@ -18,7 +18,7 @@ router.post('/', async (request, response) => {
     : await bcrypt.compare(body.password, user.passwordHash)
 
   if (!(user && passwordCorrect)) {
-    return response.status(401).json({
+    return res.status(401).json({
       error: 'Invalid email or password'
     })
   }
@@ -34,7 +34,7 @@ router.post('/', async (request, response) => {
     { expiresIn: 60*60 }
   )
 
-  response
+  res
     .status(200)
     .send({ token, username: user.username, name: user.name })
 })

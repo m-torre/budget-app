@@ -13,11 +13,19 @@ Budget.init({
   category: {
     type: DataTypes.TEXT,
     unique: true,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      isAlpha: true
+    }
   },
   amount: {
     type: DataTypes.FLOAT,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      isFloat: true
+    }
   }
 }, {
   sequelize,

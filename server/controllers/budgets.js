@@ -35,15 +35,21 @@ router.post('/', tokenExtractor, async (req, res) => {
     const budget = await Budget.create({ ...req.body, userId: user.id })
     delete budget.dataValues.userId
     budget.dataValues.user = { name: user.name }
-    res.json(budget)
+    res.status(201).json(budget)
   } catch(error) {
     return res.status(400).json({ error })
   }
 })
 
 const budgetFinder = async (req, res, next) => {
-  req.budget = await Budget.findByPk(req.params.id)
-  next()
+  if (Number.isInteger(Number(req.params.id)))
+  {
+    req.budget = await Budget.findByPk(req.params.id)
+    next()
+  }
+  else {
+    res.status(400).end()
+  }
 }
 
 router.get('/:id', budgetFinder, async (req, res) => {
@@ -56,11 +62,15 @@ router.get('/:id', budgetFinder, async (req, res) => {
 
 router.put('/:id', tokenExtractor, budgetFinder, async (req, res) => {
   if (req.budget) {
-    await req.budget.update({
-      amount: req.body.amount
-    })
-    await req.budget.save()
-    res.json(req.budget)
+    try {
+      await req.budget.update({
+        amount: req.body.amount
+      })
+      await req.budget.save()
+      res.json(req.budget)
+    } catch(error) {
+      return res.status(400).json({ error })
+    }
   } else {
     res.status(404).end()
   }
