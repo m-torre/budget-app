@@ -12,6 +12,7 @@ import {
   Card,
   CardContent,
   Container,
+  FormHelperText,
   Tab,
   Tabs,
   TextField,
@@ -43,6 +44,9 @@ const TabPanel = ({ children, value, index, ...other }) => (
 
 const Login = () => {
   const [tabValue, setTabValue] = useState(0)
+  const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -58,10 +62,10 @@ const Login = () => {
     event.preventDefault()
 
     try {
-      login(event.target.username.value, event.target.password.value)
+      login(username, password)
 
-      event.target.username.value = ''
-      event.target.password.value = ''
+      setUsername('')
+      setPassword('')
 
       navigate(origin)
     } catch (exception) {
@@ -77,14 +81,14 @@ const Login = () => {
 
     try {
       await userService.create({
-        username: event.target.username.value,
-        name: event.target.name.value,
-        password: event.target.password.value
+        username,
+        name,
+        password
       })
 
-      event.target.username.value = ''
-      event.target.name.value = ''
-      event.target.password.value = ''
+      setUsername('')
+      setName('')
+      setPassword('')
 
       enqueueSnackbar('User registered', { 
         variant: 'success',
@@ -95,6 +99,24 @@ const Login = () => {
         variant: 'error',
       })
     }
+  }
+
+  const isValidUsername = () => {
+    const usernameFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    if (usernameFormat.test(username)) return true
+    return false
+  }
+
+  const isValidName = () => {
+    const nameFormat = /^([a-zA-Z]+\s)*[a-zA-Z]+$/
+    if (nameFormat.test(name) && name.length > 2) return true
+    return false
+  }
+
+  const isValidPassword = () => {
+    const passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+    if (passwordFormat.test(password)) return true
+    return false
   }
 
   if (user) {
@@ -163,6 +185,8 @@ const Login = () => {
             >
               <TextField
                 name='username'
+                value={username}
+                onChange={({ target }) => setUsername(target.value)}
                 label='Email'
                 type='email'
                 required={true}
@@ -170,6 +194,8 @@ const Login = () => {
               />
               <TextField
                 name='password'
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
                 label='Password'
                 type='password'
                 required={true}
@@ -205,7 +231,7 @@ const Login = () => {
                   <strong>E-mail:</strong> test@budget-app.com
                 </Typography>
                 <Typography align='center'>
-                  <strong>Password:</strong> testBudget
+                  <strong>Password:</strong> testBudget1
                 </Typography>
               </AccordionDetails>
             </Accordion>
@@ -227,29 +253,48 @@ const Login = () => {
             >
               <TextField
                 name='name'
+                value={name}
+                onChange={({ target }) => setName(target.value)}
                 label='Name'
                 required={true}
+                error={name !== '' && !isValidName()}
                 fullWidth
               />
+              {name !== '' && !isValidName() && (
+              <FormHelperText error>The name must be at least 3 letters long.</FormHelperText>
+              )}
               <TextField
                 name='username'
+                value={username}
+                onChange={({ target }) => setUsername(target.value)}
                 label='Email'
                 type='email'
                 required={true}
+                error={username !== '' && !isValidUsername()}
                 fullWidth
               />
+              {username !== '' && !isValidUsername() && (
+              <FormHelperText error>The email must have a valid format.</FormHelperText>
+              )}
               <TextField
                 name='password'
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
                 label='Password'
                 type='password'
                 required={true}
+                error={password !== '' && !isValidPassword()}
                 fullWidth
               />
+              {password !== '' && !isValidPassword() && (
+              <FormHelperText error>The password must be at least 8 characters long and have a lowercase letter, an uppercase letter and a number.</FormHelperText>
+              )}
               <Button
                 type='submit'
                 color='primary'
                 variant='contained'
                 fullWidth
+                disabled={!isValidName() || !isValidUsername() || !isValidPassword()}
               >
                 Register
               </Button>

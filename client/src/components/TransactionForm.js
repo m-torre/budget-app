@@ -7,6 +7,7 @@ import {
   Button,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   InputAdornment,
   InputLabel,
@@ -19,6 +20,7 @@ import {
 import { useSnackbar } from 'notistack'
 
 const TransactionForm = () => {
+  const [name, setName] = useState('')
   const [type, setType] = useState('income')
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [category, setCategory] = useState('')
@@ -34,14 +36,14 @@ const TransactionForm = () => {
     event.preventDefault()
 
     const content = {
-      name: event.target.name.value,
+      name,
       amount: Number(event.target.amount.value),
-      date: selectedDate.toLocaleDateString(),
+      date: selectedDate,
       type: type,
       category: category
     }
 
-    event.target.name.value = ''
+    setName('')
     event.target.amount.value = ''
     setCategory('')
     setSelectedDate(new Date())
@@ -70,6 +72,12 @@ const TransactionForm = () => {
 
   const incomeCategories = transactions.getIncomeCategories()
   const expensesCategories = transactions.getExpensesCategories()
+
+  const isValidName = () => {
+    const nameFormat = /^([a-zA-Z0-9\s])*$/
+    if (nameFormat.test(name) && name.length > 1) return true
+    return false
+  }
 
   return (
     <Box
@@ -133,10 +141,16 @@ const TransactionForm = () => {
       />
       <TextField
         name='name'
+        value={name}
+        onChange={({ target }) => setName(target.value)}
         label='Name'
         required={true}
+        error={name !== '' && !isValidName()}
         fullWidth
       />
+      {name !== '' && !isValidName() && (
+      <FormHelperText error>The name must be at least 2 characters long.</FormHelperText>
+      )}
       <TextField
         name='amount'
         label='Amount'
@@ -155,6 +169,7 @@ const TransactionForm = () => {
         color='primary'
         type='submit'
         fullWidth
+        disabled={!isValidName()}
       >
         Add
       </Button>

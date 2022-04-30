@@ -19,6 +19,8 @@ import EditTransactionModal from './EditTransactionModal'
 import DeleteTransactionDialog from './DeleteTransactionDialog'
 
 const Transaction = ({ transaction, options, editModalControl, deleteDialogControl }) => {
+  const displayedDate = new Date(transaction.date)
+  
   const handleEdit = () => {
     editModalControl.openModal()
     editModalControl.setTargetId(transaction.id)
@@ -38,7 +40,7 @@ const Transaction = ({ transaction, options, editModalControl, deleteDialogContr
       </TableCell>
       <TableCell align='center'>
         <Typography variant='body1'>
-          {transaction.date}
+          {displayedDate.toLocaleDateString()}
         </Typography>
       </TableCell>
       <TableCell align='center'>

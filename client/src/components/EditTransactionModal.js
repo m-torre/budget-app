@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -35,10 +36,10 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
   const transactions = useTransactions()
   const transaction = transactions.find(id)
 
+  const [name, setName] = useState(transaction.name)
   const [category, setCategory] = useState(transaction.category)
 
-  const dateParts = transaction.date.split('/')
-  const [selectedDate, setSelectedDate] = useState(new Date(dateParts[2], dateParts[1] - 1, dateParts[0]))
+  const [selectedDate, setSelectedDate] = useState(new Date(transaction.date))
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate)
@@ -50,11 +51,11 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
     event.preventDefault()
   
     const content = {
-      name: event.target.name.value,
+      name,
       amount: Number(event.target.amount.value),
-      date: selectedDate.toLocaleDateString(),
-      category: category,
-      id: id
+      date: selectedDate,
+      category,
+      id
     }
 
     transactions.modify(id, content)
@@ -69,6 +70,12 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
 
   const incomeCategories = transactions.getIncomeCategories()
   const expensesCategories = transactions.getExpensesCategories()
+
+  const isValidName = () => {
+    const nameFormat = /^([a-zA-Z0-9\s])*$/
+    if (nameFormat.test(name) && name.length > 1) return true
+    return false
+  }
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -96,11 +103,16 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
         >
           <TextField
             name='name'
+            value={name}
+            onChange={({ target }) => setName(target.value)}
             label='Name'
-            defaultValue={transaction.name}
             required={true}
+            error={!isValidName()}
             fullWidth
           />
+          {!isValidName() && (
+          <FormHelperText error>The name must be at least 2 characters long.</FormHelperText>
+          )}
           <FormControl fullWidth>
             <InputLabel id="category-select-label">Category</InputLabel>
             <Select
@@ -145,6 +157,7 @@ const EditTransactionModal = ({ open, handleClose, id }) => {
             color='primary'
             type='submit'
             fullWidth
+            disabled={!isValidName()}
           >
             Edit
           </Button>
